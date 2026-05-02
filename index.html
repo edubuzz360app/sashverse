@@ -23,20 +23,33 @@
     <a href="/" class="nav-logo" aria-label="SashVerse Home">
       <img src="/assets/logo.png" alt="Sashikiran Logo" />
     </a>
-    <a href="#creator-section" class="nav-cta" id="nav-about-creator">About Creator</a>
+    <div class="nav-links">
+      <a href="#helix-fold" class="nav-link">About</a>
+      <a href="#species-fold" class="nav-link">Species</a>
+      <a href="#sas-fold" class="nav-link">SAS</a>
+      <a href="https://www.linkedin.com/in/sashikiran1995/" target="_blank" rel="noopener noreferrer"
+        class="nav-cta">Linkedin</a>
+      <a href="#cta-fold" class="nav-cta">Sign Up</a>
+    </div>
+    <button class="hamburger-menu" aria-label="Toggle Navigation">
+      <span class="hamburger-line"></span>
+      <span class="hamburger-line"></span>
+      <span class="hamburger-line"></span>
+    </button>
   </nav>
 
   <!-- ========== FOLD 1: HERO (Independent) ========== -->
   <section class="fold fold-hero" id="hero-fold">
     <div class="hero-bg">
-      <video id="hero-video" autoplay muted loop playsinline>
+      <video id="hero-video" autoplay muted loop playsinline poster="/assets/hero.jpg">
         <source src="/assets/hero-video.mp4" type="video/mp4">
       </video>
       <div class="hero-gradient-overlay"></div>
     </div>
     <div class="hero-content">
       <h1 class="hero-title" data-text="Welcome to SashVerse">
-        Welcome to<br class="mobile-break"> <span class="magic-s">S</span>a<span class="magic-s">s</span>hVer<span class="magic-s">s</span>e
+        Welcome to<br class="mobile-break"> <span class="magic-s">S</span>a<span class="magic-s">s</span>hVer<span
+          class="magic-s">s</span>e
       </h1>
       <p class="hero-supporting">An S S Sashikiran Universe</p>
       <a href="#creator-section" class="hero-cta" id="hero-about-creator">
@@ -67,8 +80,7 @@
       <section class="fold fold-helix" id="helix-fold">
         <div class="helix-glass">
           <span class="section-tag">ABOUT SASHVERSE</span>
-          <p class="helix-line reveal-line">Intelligence isn't random. It's designed.</p>
-          <p class="helix-line reveal-line">SashVerse is an evolving architecture —<br>part system, part instinct.</p>
+          <p class="helix-line reveal-line">SashVerse is an evolving architecture<br>part system, part instinct.</p>
           <p class="helix-line reveal-line">Every signal has structure. Every structure has purpose.</p>
         </div>
       </section>
@@ -152,27 +164,28 @@
           <div class="sas-grid">
             <div class="sas-card reveal-card" data-sas="SAS.01">
               <div class="sas-designator">SAS.01</div>
-              <h3 class="sas-name">Design System &amp; .md Generator</h3>
-              <p class="sas-desc">Generates token-driven design systems and structured documentation from intent.</p>
-              <p class="sas-insight">"How to think like a Creator — and ship like a system."</p>
+              <h3 class="sas-name">Sashology Design System</h3>
+              <p class="sas-desc">Generates token-driven design systems and .md files for consistent pattern</p>
+              <p class="sas-insight">"How AI Creator thinks and builds the foundation of SashVerse"</p>
             </div>
             <div class="sas-card reveal-card" data-sas="SAS.02">
               <div class="sas-designator">SAS.02</div>
-              <h3 class="sas-name">Resume Validator</h3>
-              <p class="sas-desc">Parses, scores, and validates professional profiles against market standards.</p>
-              <p class="sas-insight">"How to validate skills — without human bias."</p>
+              <h3 class="sas-name">Document Validator</h3>
+              <p class="sas-desc">Parses, scores, and validates professional profiles, portfolios against market
+                standards.</p>
+              <p class="sas-insight">"How AI Evaluator validates systems without human bias."</p>
             </div>
             <div class="sas-card reveal-card" data-sas="SAS.03">
               <div class="sas-designator">SAS.03</div>
-              <h3 class="sas-name">Job Marketplace Agent</h3>
+              <h3 class="sas-name">Marketplace Agent</h3>
               <p class="sas-desc">Scans, matches, and surfaces opportunities aligned to capability graphs.</p>
-              <p class="sas-insight">"How to find work — before it finds you."</p>
+              <p class="sas-insight">"How AI Business Dev Executive finds opportunity before it finds you."</p>
             </div>
             <div class="sas-card reveal-card" data-sas="SAS.04">
               <div class="sas-designator">SAS.04</div>
-              <h3 class="sas-name">UX Community Agent</h3>
+              <h3 class="sas-name">Community Agent</h3>
               <p class="sas-desc">Orchestrates design communities, events, and collaborative learning systems.</p>
-              <p class="sas-insight">"Orchestrating skills for a cause — not just a career."</p>
+              <p class="sas-insight">"How AI Orchestrator builds communities for a cause, not just a career."</p>
             </div>
           </div>
         </div>
@@ -183,11 +196,23 @@
         <div class="creator-inner reveal-block">
           <span class="section-tag">ORIGIN POINT</span>
           <h2 class="section-title">The Creator Behind SashVerse</h2>
-          <div class="creator-lines">
+          <div class="creator-lines"
+            style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
             <p>Every system has an origin point.</p>
-            <p><strong>Sashikiran</strong> — system builder, UX architect, AI thinker.</p>
-            <p>Not a designer who learned AI.<br>An architect who designed intelligence.</p>
-            <p class="creator-proof">SashVerse is the proof.</p>
+            <p class="creator-proof">Architect behind SashVerse is -</p>
+            <img src="/assets/logo.png" alt="Sashikiran" class="creator-image" style="width: 40%;">
+            <p>A system builder, UX architect, AI thinker.</p>
+            <div class="creator-links" style="display: flex; gap: 1.5rem; margin-top: 1.5rem;">
+              <a href="https://www.linkedin.com/in/sashikiran1995/" target="_blank" rel="noopener noreferrer" class="creator-icon-link" aria-label="LinkedIn" style="color: var(--primary); display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; border: 1px solid rgba(225, 6, 0, 0.35); border-radius: 50%; background: rgba(225, 6, 0, 0.1); transition: all 0.3s ease;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-linkedin"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
+              </a>
+              <a href="https://sashikiranux.framer.website/" target="_blank" rel="noopener noreferrer" class="creator-icon-link" aria-label="Portfolio" style="color: var(--primary); display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; border: 1px solid rgba(225, 6, 0, 0.35); border-radius: 50%; background: rgba(225, 6, 0, 0.1); transition: all 0.3s ease;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-briefcase"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+              </a>
+              <a href="https://sashikiran.com/" target="_blank" rel="noopener noreferrer" class="creator-icon-link" aria-label="Website" style="color: var(--primary); display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; border: 1px solid rgba(225, 6, 0, 0.35); border-radius: 50%; background: rgba(225, 6, 0, 0.1); transition: all 0.3s ease;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-globe"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+              </a>
+            </div>
           </div>
         </div>
       </section>

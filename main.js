@@ -11,119 +11,113 @@ window.addEventListener('scroll', () => {
   nav.classList.toggle('scrolled', window.scrollY > 80);
 });
 
-document.querySelectorAll('[href="#creator-section"]').forEach(link => {
-  link.addEventListener('click', (e) => {
-    e.preventDefault();
-    document.getElementById('creator-section')?.scrollIntoView({ behavior: 'smooth' });
+const hamburger = document.querySelector('.hamburger-menu');
+const navLinks = document.querySelector('.nav-links');
+
+if (hamburger && navLinks) {
+  hamburger.addEventListener('click', () => {
+    hamburger.classList.toggle('active');
+    navLinks.classList.toggle('active');
   });
-});
 
-// ==========================================
-// 2. AMBIENT IMAGE SEQUENCE ENGINE
-// ==========================================
-const TOTAL_FRAMES = 91;
-const canvas = document.getElementById('sequence-canvas');
-const ctx = canvas.getContext('2d');
-
-// Frame cache
-const frameImages = new Array(TOTAL_FRAMES + 1);
-let currentFrame = 1;
-let targetFrame = 1;
-
-function getFrameSrc(index) {
-  return `/assets/bg-img/ezgif-frame-${String(index).padStart(3, '0')}.png`;
+  document.querySelectorAll('.nav-link, .nav-cta').forEach(link => {
+    link.addEventListener('click', () => {
+      hamburger.classList.remove('active');
+      navLinks.classList.remove('active');
+    });
+  });
 }
 
-// Canvas sizing
+// ==========================================
+// 2. CELESTIAL SPACE PARTICLES ENGINE
+// ==========================================
+const canvas = document.getElementById('sequence-canvas');
+const ctx = canvas.getContext('2d');
+let particles = [];
+
+class Particle {
+  constructor() {
+    this.x = Math.random() * window.innerWidth;
+    this.y = Math.random() * window.innerHeight;
+    this.z = Math.random() * 2 + 0.1; // Depth (size & speed modifier)
+    this.baseSize = this.z * 1.5;
+    this.speedY = -(this.z * 0.3) - 0.1; // Float upwards
+    this.speedX = (Math.random() - 0.5) * 0.2;
+    
+    // Red/Gold hues for SashVerse
+    const isGold = Math.random() > 0.85;
+    this.color = isGold ? '255, 179, 71' : '225, 6, 0';
+    this.opacity = Math.random() * 0.5 + 0.2;
+    
+    // Pulse animation
+    this.angle = Math.random() * Math.PI * 2;
+    this.pulseSpeed = Math.random() * 0.05 + 0.01;
+  }
+  
+  update(scrollVelocity) {
+    // Add scroll velocity to Y speed
+    this.y += this.speedY - (scrollVelocity * this.z * 0.05);
+    this.x += this.speedX;
+    
+    this.angle += this.pulseSpeed;
+    
+    // Wrap around
+    if (this.y < -20) this.y = canvas.height + 20;
+    if (this.y > canvas.height + 20) this.y = -20;
+    if (this.x < -20) this.x = canvas.width + 20;
+    if (this.x > canvas.width + 20) this.x = -20;
+  }
+  
+  draw() {
+    const currentOpacity = this.opacity + Math.sin(this.angle) * 0.2;
+    const currentSize = Math.max(0.1, this.baseSize + Math.sin(this.angle) * 0.5);
+    
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, currentSize, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(${this.color}, ${Math.max(0, Math.min(1, currentOpacity))})`;
+    
+    // Glow
+    ctx.shadowBlur = this.z * 4;
+    ctx.shadowColor = `rgba(${this.color}, 1)`;
+    
+    ctx.fill();
+    ctx.shadowBlur = 0; // Reset
+  }
+}
+
+function initParticles() {
+  particles = [];
+  const numParticles = Math.floor((window.innerWidth * window.innerHeight) / 9000);
+  for (let i = 0; i < numParticles; i++) {
+    particles.push(new Particle());
+  }
+}
+
+// Track scroll velocity for interactive particles
+let lastScrollY = window.scrollY;
+
+function animateParticles() {
+  // Calculate scroll velocity
+  const currentScrollY = window.scrollY;
+  const scrollVelocity = currentScrollY - lastScrollY;
+  lastScrollY = currentScrollY;
+  
+  // Clear with a very slight trailing effect
+  ctx.fillStyle = 'rgba(5, 7, 15, 0.4)';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  
+  for (let i = 0; i < particles.length; i++) {
+    particles[i].update(scrollVelocity);
+    particles[i].draw();
+  }
+  
+  requestAnimationFrame(animateParticles);
+}
+
 function resizeCanvas() {
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
-  drawFrame(currentFrame);
-}
-
-function drawFrame(index) {
-  const img = frameImages[index];
-  if (!img || !img.complete) return;
-
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-  // Cover-fit the image
-  const imgRatio = img.naturalWidth / img.naturalHeight;
-  const canvasRatio = canvas.width / canvas.height;
-  let drawW, drawH, drawX, drawY;
-
-  if (canvasRatio > imgRatio) {
-    drawW = canvas.width;
-    drawH = canvas.width / imgRatio;
-    drawX = 0;
-    // Align closer to top so robot face doesn't cut off
-    drawY = (canvas.height - drawH) * 0.1;
-  } else {
-    drawH = canvas.height;
-    drawW = canvas.height * imgRatio;
-    drawX = (canvas.width - drawW) / 2;
-    drawY = 0;
-  }
-
-  // Render at full — CSS handles opacity/blur/brightness suppression
-  ctx.drawImage(img, drawX, drawY, drawW, drawH);
-}
-
-// Preload frames in priority ranges
-function preloadRange(start, end) {
-  return new Promise((resolve) => {
-    let loaded = 0;
-    const total = end - start + 1;
-    for (let i = start; i <= end; i++) {
-      if (frameImages[i] && frameImages[i].complete) {
-        loaded++;
-        if (loaded >= total) resolve();
-        continue;
-      }
-      const img = new Image();
-      img.src = getFrameSrc(i);
-      img.onload = () => {
-        loaded++;
-        if (loaded >= total) resolve();
-      };
-      img.onerror = () => {
-        loaded++;
-        if (loaded >= total) resolve();
-      };
-      frameImages[i] = img;
-    }
-    if (loaded >= total) resolve();
-  });
-}
-
-// ==========================================
-// 3. IMAGE SEQUENCE SCROLL CONTROL
-// ==========================================
-function mapRange(value, inMin, inMax, outMin, outMax) {
-  const clamped = Math.max(inMin, Math.min(inMax, value));
-  return Math.round(outMin + ((clamped - inMin) * (outMax - outMin)) / (inMax - inMin));
-}
-
-// Five folds mapped to the available 91 frames
-const foldConfig = {
-  fold2: { startFrame: 1,  endFrame: 18, opacityStart: 0.70, opacityEnd: 0.78, scaleStart: 1.02, scaleEnd: 1.05, yStart: 0,   yEnd: -5  },
-  fold3: { startFrame: 19, endFrame: 36, opacityStart: 0.75, opacityEnd: 0.82, scaleStart: 1.03, scaleEnd: 1.06, yStart: -3,  yEnd: -10 },
-  fold4: { startFrame: 37, endFrame: 54, opacityStart: 0.78, opacityEnd: 0.85, scaleStart: 1.03, scaleEnd: 1.06, yStart: -5,  yEnd: -15 },
-  fold5: { startFrame: 55, endFrame: 72, opacityStart: 0.82, opacityEnd: 0.90, scaleStart: 1.02, scaleEnd: 1.04, yStart: -2,  yEnd: -5  },
-  fold6: { startFrame: 73, endFrame: 91, opacityStart: 0.85, opacityEnd: 0.92, scaleStart: 1.00, scaleEnd: 1.02, yStart: 0,   yEnd: 0   }
-};
-
-function updateCanvasStyle(foldKey, progress) {
-  const config = foldConfig[foldKey];
-  if (!config) return;
-
-  const opacity = config.opacityStart + (config.opacityEnd - config.opacityStart) * progress;
-  const scale = config.scaleStart + (config.scaleEnd - config.scaleStart) * progress;
-  const translateY = config.yStart + (config.yEnd - config.yStart) * progress;
-
-  canvas.style.opacity = opacity;
-  canvas.style.filter = `brightness(0.75) saturate(1.3)`;
-  canvas.style.transform = `scale(${scale}) translateY(${translateY}px)`;
+  initParticles();
 }
 
 // ==========================================
@@ -241,72 +235,11 @@ gsap.to('.cta-inner.reveal-block', {
 });
 
 // ==========================================
-// 5. AMBIENT SCROLL DRIVER
+// 5. CELESTIAL SPACE INIT
 // ==========================================
-const immersiveZone = document.getElementById('immersive-zone');
-const foldElements = {
-  fold2: document.getElementById('helix-fold'),
-  fold3: document.getElementById('species-fold'),
-  fold4: document.getElementById('sas-fold'),
-  fold5: document.getElementById('creator-section'),
-  fold6: document.getElementById('cta-fold')
-};
-
-ScrollTrigger.create({
-  trigger: immersiveZone,
-  start: 'top top',
-  end: 'bottom bottom',
-  scrub: 0.8,
-  onUpdate: () => {
-    const scrollY = window.scrollY;
-    const viewCenter = scrollY + window.innerHeight / 2;
-
-    for (const [foldKey, foldEl] of Object.entries(foldElements)) {
-      if (!foldEl) continue;
-      const config = foldConfig[foldKey];
-      const foldTop = foldEl.offsetTop;
-      const foldEnd = foldTop + foldEl.offsetHeight;
-
-      if (viewCenter >= foldTop && viewCenter <= foldEnd) {
-        const progress = Math.max(0, Math.min(1, (viewCenter - foldTop) / (foldEnd - foldTop)));
-
-        // Map to frame
-        targetFrame = mapRange(progress, 0, 1, config.startFrame, config.endFrame);
-
-        // Update style
-        updateCanvasStyle(foldKey, progress);
-
-        // Draw frame if changed
-        if (currentFrame !== targetFrame) {
-          currentFrame = targetFrame;
-          requestAnimationFrame(() => drawFrame(currentFrame));
-        }
-
-        break;
-      }
-    }
-  }
-});
-
-// ==========================================
-// 6. INIT + PRELOAD
-// ==========================================
-async function init() {
-  resizeCanvas();
-
-  // Priority load: first fold range
-  await preloadRange(1, 18);
-  drawFrame(1);
-
-  // Stream remaining ranges
-  preloadRange(19, 36);
-  preloadRange(37, 54);
-  preloadRange(55, 72);
-  preloadRange(73, 91);
-}
-
 window.addEventListener('resize', resizeCanvas);
-init();
+resizeCanvas();
+animateParticles();
 
 // ==========================================
 // 7. CUSTOM CURSOR SYSTEM
